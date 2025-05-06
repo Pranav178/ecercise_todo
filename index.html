@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Year-Long Exercise To-Do List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Arial', sans-serif; }
+        .task-completed { text-decoration: line-through; color: #6b7280; }
+    </style>
+</head>
+<link rel="manifest" href="/manifest.json">
+<body class="bg-gray-100 min-h-screen p-6">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+        <h1 class="text-3xl font-bold text-center mb-6">Year-Long Exercise To-Do List</h1>
+
+        <!-- Instructions -->
+        <div class="bg-blue-100 p-4 rounded-lg mb-6">
+            <p class="text-blue-800">
+                <strong>Instructions:</strong> Select a date, day type, and phase to load tasks. Check off tasks as you complete them. Use Weekly Schedule to plan, Monthly Progress to track metrics, and Video Resources for exercise form. Data saves automatically in your browser.
+            </p>
+        </div>
+
+        <!-- Daily To-Do List -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Daily Tasks</h2>
+            <div class="flex space-x-4 mb-4">
+                <input type="date" id="taskDate" class="border p-2 rounded" />
+                <select id="dayType" class="border p-2 rounded">
+                    <option value="Strength">Strength</option>
+                    <option value="Mobility/Posture">Mobility/Posture</option>
+                    <option value="Rest">Rest</option>
+                </select>
+                <select id="phase" class="border p-2 rounded">
+                    <option value="Beginner">Beginner (Months 1-4)</option>
+                    <option value="Intermediate">Intermediate (Months 5-8)</option>
+                    <option value="Advanced">Advanced (Months 9-12)</option>
+                </select>
+                <button id="loadTasks" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Load Tasks</button>
+            </div>
+            <div id="taskList" class="space-y-2"></div>
+            <textarea id="taskNotes" class="w-full border p-2 rounded mt-4" placeholder="Log energy, soreness, digestion..."></textarea>
+        </div>
+
+        <!-- Weekly Schedule -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Weekly Schedule</h2>
+            <div id="weeklySchedule" class="grid grid-cols-7 gap-2 text-center"></div>
+        </div>
+
+        <!-- Monthly Progress Tracker -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Monthly Progress Tracker</h2>
+            <div class="flex space-x-4 mb-4">
+                <input type="month" id="progressMonth" class="border p-2 rounded" />
+                <button id="addProgress" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Add Month</button>
+            </div>
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border p-2">Month</th>
+                        <th class="border p-2">Push-Ups</th>
+                        <th class="border p-2">Pull-Ups</th>
+                        <th class="border p-2">Dead Hang (s)</th>
+                        <th class="border p-2">Posture</th>
+                        <th class="border p-2">Gut Health</th>
+                        <th class="border p-2">Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="progressTable"></tbody>
+            </table>
+        </div>
+
+        <!-- Video Resources -->
+        <div>
+            <h2 class="text-2xl font-semibold mb-4">Video Resources</h2>
+            <ul class="list-disc pl-6 space-y-2">
+                <li><a href="https://www.youtube.com/watch?v=m4g-4l3jDHE" target="_blank" class="text-blue-500 hover:underline">Muscle-Ups (FitnessFAQs)</a> - Step-by-step progression.</li>
+                <li><a href="https://www.youtube.com/watch?v=5c8JyrTFLgQ" target="_blank" class="text-blue-500 hover:underline">Pistol Squats (Calisthenicmovement)</a> - Beginner to advanced.</li>
+                <li><a href="https://www.youtube.com/watch?v=ClZq0u6GZw0" target="_blank" class="text-blue-500 hover:underline">Dead Hangs (Antranik)</a> - Grip and posture.</li>
+                <li><a href="https://www.youtube.com/watch?v=IxQM3iS9zJI" target="_blank" class="text-blue-500 hover:underline">L-Sit (FitnessFAQs)</a> - Core strength guide.</li>
+                <li><a href="https://www.youtube.com/watch?v=7qX2A0X4kHE" target="_blank" class="text-blue-500 hover:underline">Dragon Flags (Calisthenicmovement)</a> - Advanced core.</li>
+                <li><a href="https://www.youtube.com/watch?v=v7AYKMP6rOE" target="_blank" class="text-blue-500 hover:underline">Vinyasa Flow (Yoga With Adriene)</a> - 20-min full-body flow.</li>
+                <li><a href="https://www.youtube.com/watch?v=ZGQnF2Q7O9A" target="_blank" class="text-blue-500 hover:underline">Kapalbhati (The Art of Living)</a> - Breathing technique.</li>
+                <li><a href="https://www.youtube.com/watch?v=5R54QoUbbv8" target="_blank" class="text-blue-500 hover:underline">Posture (Squat University)</a> - 10-min daily routine.</li>
+                <li><a href="https://www.youtube.com/watch?v=7zG79Z5eLQA" target="_blank" class="text-blue-500 hover:underline">Spinal Decompression (Bob & Brad)</a> - Traction exercises.</li>
+                <li><a href="https://www.youtube.com/watch?v=7v0z3yVULGk" target="_blank" class="text-blue-500 hover:underline">Abdominal Massage (PsycheTruth)</a> - Digestion aid.</li>
+            </ul>
+        </div>
+
+        <!-- Safety Notes -->
+        <div class="mt-8 bg-yellow-100 p-4 rounded-lg">
+            <h3 class="text-xl font-semibold mb-2">Safety Notes</h3>
+            <ul class="list-disc pl-6">
+                <li>Watch videos for proper form (e.g., muscle-ups, pistol squats).</li>
+                <li>Stop if you feel joint pain; consult a doctor.</li>
+                <li>Avoid kapalbhati if pregnant, menstruating, or with digestive issues.</li>
+                <li>Use a sturdy pull-up bar for dead hangs and pull-ups.</li>
+                <li>Monitor gut health; add prebiotics if needed.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Task definitions for each phase
+        const tasks = {
+            Beginner: {
+                Strength: [
+                    { name: "Push: Knee push-ups (3x8-12)", completed: false },
+                    { name: "Pull: Incline rows (3x8-12)", completed: false },
+                    { name: "Legs: Bodyweight squats (3x10-15)", completed: false },
+                    { name: "Core: Plank (3x20-30s)", completed: false },
+                    { name: "Posture: Dead hangs (3x20-30s)", completed: false }
+                ],
+                Mobility: [
+                    { name: "Spinal: Cat-cow (3x10)", completed: false },
+                    { name: "Hip: Lunges with twist (3x10/side)", completed: false },
+                    { name: "Shoulder: Wall angels (3x10)", completed: false },
+                    { name: "Posture: Dead hangs (3x20-30s)", completed: false }
+                ],
+                Yoga: [
+                    { name: "Poses: Child’s pose (1 min), Downward dog (1 min), Cobra pose (1 min)", completed: false },
+                    { name: "Pranayama: Diaphragmatic breathing (4s in, 4s hold, 6s out, 10 cycles)", completed: false }
+                ],
+                GutHealth: [
+                    { name: "Abdominal massage (2 min)", completed: false },
+                    { name: "Probiotic food (e.g., yogurt)", completed: false },
+                    { name: "Drink 500ml water", completed: false }
+                ],
+                Lifestyle: [
+                    { name: "Sleep 8-10 hours", completed: false },
+                    { name: "Protein (1.2-2.2g/kg body weight)", completed: false },
+                    { name: "Hydrate (2-3L water)", completed: false }
+                ]
+            },
+            Intermediate: {
+                Strength: [
+                    { name: "Push: Regular push-ups (3x10-15)", completed: false },
+                    { name: "Pull: Negative pull-ups (3x5-8)", completed: false },
+                    { name: "Legs: Bulgarian split squats (3x8-12/side)", completed: false },
+                    { name: "Core: Hanging leg raises (3x8-12)", completed: false },
+                    { name: "Posture: Dead hangs (3x45s)", completed: false }
+                ],
+                Mobility: [
+                    { name: "Spinal: Thoracic rotations (3x10/side)", completed: false },
+                    { name: "Hip: Cossack squats (3x10/side)", completed: false },
+                    { name: "Shoulder: Resistance band pull-aparts (3x12)", completed: false },
+                    { name: "Posture: Dead hangs (3x45s)", completed: false }
+                ],
+                Yoga: [
+                    { name: "Poses: Sun salutations (3 rounds), Warrior II (1 min/side), Bridge pose (1 min)", completed: false },
+                    { name: "Pranayama: Alternate nostril breathing (10 cycles)", completed: false }
+                ],
+                GutHealth: [
+                    { name: "Abdominal massage (2 min)", completed: false },
+                    { name: "Probiotic food (e.g., yogurt)", completed: false },
+                    { name: "Drink 500ml water", completed: false }
+                ],
+                Lifestyle: [
+                    { name: "Sleep 8-10 hours", completed: false },
+                    { name: "Protein (1.2-2.2g/kg body weight)", completed: false },
+                    { name: "Hydrate (2-3L water)", completed: false }
+                ]
+            },
+            Advanced: {
+                Strength: [
+                    { name: "Push: Archer push-ups (3x8-12/side)", completed: false },
+                    { name: "Pull: Pull-ups (3x5-10)", completed: false },
+                    { name: "Legs: Pistol squats (3x5-8/side, assisted)", completed: false },
+                    { name: "Core: L-sit hold (3x20-30s)", completed: false },
+                    { name: "Posture: Dead hangs (3x60s)", completed: false }
+                ],
+                Mobility: [
+                    { name: "Spinal: Jefferson curls (3x10)", completed: false },
+                    { name: "Hip: 90/90 hip switches (3x10/side)", completed: false },
+                    { name: "Shoulder: Handstand practice (3x30s, wall-supported)", completed: false },
+                    { name: "Posture: Dead hangs (3x60s)", completed: false }
+                ],
+                Yoga: [
+                    { name: "Poses: Vinyasa flow (5 min), Crow pose (1 min practice)", completed: false },
+                    { name: "Pranayama: Kapalbhati (2 sets of 30 breaths)", completed: false }
+                ],
+                GutHealth: [
+                    { name: "Abdominal massage (2 min)", completed: false },
+                    { name: "Probiotic food (e.g., yogurt)", completed: false },
+                    { name: "Drink 500ml water", completed: false }
+                ],
+                Lifestyle: [
+                    { name: "Sleep 8-10 hours", completed: false },
+                    { name: "Protein (1.2-2.2g/kg body weight)", completed: false },
+                    { name: "Hydrate (2-3L water)", completed: false }
+                ]
+            },
+            Rest: {
+                Rest: [
+                    { name: "Light walk (15-20 min)", completed: false },
+                    { name: "Gentle stretching (10 min)", completed: false },
+                    { name: "Gut Health: Abdominal massage (2 min)", completed: false },
+                    { name: "Probiotic food (e.g., yogurt)", completed: false },
+                    { name: "Drink 500ml water", completed: false },
+                    { name: "Sleep 8-10 hours", completed: false },
+                    { name: "Protein (1.2-2.2g/kg body weight)", completed: false },
+                    { name: "Hydrate (2-3L water)", completed: false }
+                ]
+            }
+        };
+
+        // Load tasks based on selections
+        document.getElementById('loadTasks').addEventListener('click', () => {
+            const date = document.getElementById('taskDate').value;
+            const dayType = document.getElementById('dayType').value;
+            const phase = document.getElementById('phase').value;
+
+            if (!date) {
+                alert('Please select a date.');
+                return;
+            }
+
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = '';
+
+            // Load saved tasks or initialize new ones
+            const taskKey = `${date}_${dayType}_${phase}`;
+            let savedTasks = JSON.parse(localStorage.getItem(taskKey)) || {};
+            let notes = savedTasks.notes || '';
+
+            // Warm-Up
+            taskList.innerHTML += '<h3 class="text-xl font-semibold mb-2">Warm-Up (5 min)</h3>';
+            const warmUpTasks = [
+                { name: "Arm circles (30s)", completed: savedTasks.warmUp?.armCircles || false },
+                { name: "Leg swings (30s/side)", completed: savedTasks.warmUp?.legSwings || false },
+                { name: "Cat-cow (10 reps)", completed: savedTasks.warmUp?.catCow || false }
+            ];
+            warmUpTasks.forEach(task => {
+                taskList.innerHTML += `
+                    <div class="flex items-center">
+                        <input type="checkbox" ${task.completed ? 'checked' : ''} data-task="warmUp_${task.name}" class="mr-2">
+                        <span class="${task.completed ? 'task-completed' : ''}">${task.name}</span>
+                    </div>`;
+            });
+
+            // Calisthenics or Rest
+            if (dayType !== 'Rest') {
+                taskList.innerHTML += `<h3 class="text-xl font-semibold mt-4 mb-2">${dayType} (30 min)</h3>`;
+                const calisthenicsTasks = tasks[phase][dayType === 'Strength' ? 'Strength' : 'Mobility'];
+                calisthenicsTasks.forEach(task => {
+                    const isCompleted = savedTasks.calisthenics?.[task.name] || false;
+                    taskList.innerHTML += `
+                        <div class="flex items-center">
+                            <input type="checkbox" ${isCompleted ? 'checked' : ''} data-task="calisthenics_${task.name}" class="mr-2">
+                            <span class="${isCompleted ? 'task-completed' : ''}">${task.name}</span>
+                        </div>`;
+                });
+
+                // Yoga
+                taskList.innerHTML += '<h3 class="text-xl font-semibold mt-4 mb-2">Yoga & Breathing (10 min)</h3>';
+                tasks[phase].Yoga.forEach(task => {
+                    const isCompleted = savedTasks.yoga?.[task.name] || false;
+                    taskList.innerHTML += `
+                        <div class="flex items-center">
+                            <input type="checkbox" ${isCompleted ? 'checked' : ''} data-task="yoga_${task.name}" class="mr-2">
+                            <span class="${isCompleted ? 'task-completed' : ''}">${task.name}</span>
+                        </div>`;
+                });
+
+                // Gut Health
+                taskList.innerHTML += '<h3 class="text-xl font-semibold mt-4 mb-2">Gut Health (5 min)</h3>';
+                tasks[phase].GutHealth.forEach(task => {
+                    const isCompleted = savedTasks.gutHealth?.[task.name] || false;
+                    taskList.innerHTML += `
+                        <div class="flex items-center">
+                            <input type="checkbox" ${isCompleted ? 'checked' : ''} data-task="gutHealth_${task.name}" class="mr-2">
+                            <span class="${isCompleted ? 'task-completed' : ''}">${task.name}</span>
+                        </div>`;
+                });
+
+                // Lifestyle
+                taskList.innerHTML += '<h3 class="text-xl font-semibold mt-4 mb-2">Lifestyle</h3>';
+                tasks[phase].Lifestyle.forEach(task => {
+                    const isCompleted = savedTasks.lifestyle?.[task.name] || false;
+                    taskList.innerHTML += `
+                        <div class="flex items-center">
+                            <input type="checkbox" ${isCompleted ? 'checked' : ''} data-task="lifestyle_${task.name}" class="mr-2">
+                            <span class="${isCompleted ? 'task-completed' : ''}">${task.name}</span>
+                        </div>`;
+                });
+            } else {
+                taskList.innerHTML += '<h3 class="text-xl font-semibold mt-4 mb-2">Rest Day</h3>';
+                tasks.Rest.Rest.forEach(task => {
+                    const isCompleted = savedTasks.rest?.[task.name] || false;
+                    taskList.innerHTML += `
+                        <div class="flex items-center">
+                            <input type="checkbox" ${isCompleted ? 'checked' : ''} data-task="rest_${task.name}" class="mr-2">
+                            <span class="${isCompleted ? 'task-completed' : ''}">${task.name}</span>
+                        </div>`;
+                });
+            }
+
+            // Update notes
+            document.getElementById('taskNotes').value = notes;
+
+            // Save task state on checkbox change
+            taskList.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    const [category, ...taskNameParts] = checkbox.dataset.task.split('_');
+                    const taskName = taskNameParts.join('_');
+                    savedTasks[category] = savedTasks[category] || {};
+                    savedTasks[category][taskName] = checkbox.checked;
+                    savedTasks.notes = document.getElementById('taskNotes').value;
+                    localStorage.setItem(taskKey, JSON.stringify(savedTasks));
+                    checkbox.nextElementSibling.classList.toggle('task-completed', checkbox.checked);
+                });
+            });
+
+            // Save notes on input
+            document.getElementById('taskNotes').addEventListener('input', () => {
+                savedTasks.notes = document.getElementById('taskNotes').value;
+                localStorage.setItem(taskKey, JSON.stringify(savedTasks));
+            });
+        });
+
+        // Weekly Schedule
+        function renderWeeklySchedule() {
+            const schedule = document.getElementById('weeklySchedule');
+            schedule.innerHTML = `
+                <div class="font-semibold">Mon</div><div class="font-semibold">Tue</div><div class="font-semibold">Wed</div>
+                <div class="font-semibold">Thu</div><div class="font-semibold">Fri</div><div class="font-semibold">Sat</div>
+                <div class="font-semibold">Sun</div>
+                <div>Strength</div><div>Mobility/Posture</div><div>Strength</div>
+                <div>Mobility/Posture</div><div>Strength</div><div>Mobility/Posture</div><div>Rest</div>`;
+        }
+        renderWeeklySchedule();
+
+        // Monthly Progress Tracker
+        let progressData = JSON.parse(localStorage.getItem('progressData')) || [];
+        function renderProgressTable() {
+            const table = document.getElementById('progressTable');
+            table.innerHTML = '';
+            progressData.forEach((entry, index) => {
+                table.innerHTML += `
+                    <tr>
+                        <td class="border p-2">${entry.month}</td>
+                        <td class="border p-2"><input type="number" value="${entry.pushUps || ''}" data-index="${index}" data-field="pushUps" class="w-full"></td>
+                        <td class="border p-2"><input type="number" value="${entry.pullUps || ''}" data-index="${index}" data-field="pullUps" class="w-full"></td>
+                        <td class="border p-2"><input type="number" value="${entry.deadHang || ''}" data-index="${index}" data-field="deadHang" class="w-full"></td>
+                        <td class="border p-2"><input type="text" value="${entry.posture || ''}" data-index="${index}" data-field="posture" class="w-full"></td>
+                        <td class="border p-2"><input type="text" value="${entry.gutHealth || ''}" data-index="${index}" data-field="gutHealth" class="w-full"></td>
+                        <td class="border p-2"><input type="text" value="${entry.notes || ''}" data-index="${index}" data-field="notes" class="w-full"></td>
+                    </tr>`;
+            });
+
+            // Save progress on input
+            table.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', () => {
+                    const index = input.dataset.index;
+                    const field = input.dataset.field;
+                    progressData[index][field] = input.type === 'number' ? parseInt(input.value) || '' : input.value;
+                    localStorage.setItem('progressData', JSON.stringify(progressData));
+                });
+            });
+        }
+
+        document.getElementById('addProgress').addEventListener('click', () => {
+            const month = document.getElementById('progressMonth').value;
+            if (!month) {
+                alert('Please select a month.');
+                return;
+            }
+            progressData.push({ month, pushUps: '', pullUps: '', deadHang: '', posture: '', gutHealth: '', notes: '' });
+            localStorage.setItem('progressData', JSON.stringify(progressData));
+            renderProgressTable();
+        });
+
+        renderProgressTable();
+    </script>
+</body>
+</html>
